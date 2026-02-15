@@ -1,0 +1,16 @@
+Script started on 2026-02-15 18:20:30+00:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="108" LINES="17"]
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ [7mg++ -std=c++17 main.cpp ZipCodeBuffer.cpp -o zi[27m[7mp[27m[7mprog[27m[A[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ g++ -std=c++17 main.cpp ZipCodeBuffer.cpp -o zipprog[C
+[?2004l[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ [7mg++ -std=c++17 main.cpp ZipCodeBuffer.cpp -o zi[27m[7mp[27m[7mprog[27m[A[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ g++ -std=c++17 main.cpp ZipCodeBuffer.cpp -o zip[1Ppro[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7m./zipprog us_postal_codes.csv > out1.txt[27m
+[7m./zipprog us_postal_codes_sorted_by_place.csv > out2.txt[27m
+[7mtail -n +2 out1.txt > o1.txt[27m
+[7mtail -n +2 out2.txt > o2.txt[27m
+[7mdiff o1.txt o2.txt[27m[A[A[A[A[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ ./zipprog us_postal_codes.csv > out1.txt
+./zipprog us_postal_codes_sorted_by_place.csv > out2.txt
+tail -n +2 out1.txt > o1.txt
+tail -n +2 out2.txt > o2.txt
+diff o1.txt o2.txt[C
+[?2004l[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/Software-System-Projects- [0;36m([1;31mmain[0;36m) [0m$ exit
+[?2004lexit
+
+Script done on 2026-02-15 18:22:22+00:00 [COMMAND_EXIT_CODE="0"]
