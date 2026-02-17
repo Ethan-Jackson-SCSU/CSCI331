@@ -1,7 +1,8 @@
 /**
  * @file main.cpp
  * @brief Main application program for ZIP code geographic analysis
- * @author Teagen Lee, ADD NAMES
+ * @author Teagen Lee (primary contributor)
+ * @author Dristi Barnwal, Ethan Jackson, Marcus Julius, Natoli Mayu (reviewers)
  * @date February 2026
  *
  * This program analyzes ZIP code data from a CSV file and generates a report
@@ -19,8 +20,7 @@
  * - Northernmost: ZIP code with greatest (most positive) latitude
  * - Southernmost: ZIP code with least (most negative) latitude
  *
- * IMPORTANT NOTE ABOUT TIES:
- * Some records can have identical latitude/longitude. To ensure the output is
+ * @note Some records can have identical latitude/longitude. To ensure output is
  * identical regardless of CSV row ordering, ties are broken deterministically
  * by choosing the smaller ZIP code.
  */
@@ -90,8 +90,8 @@ static bool smallerZipWins(int candidate, int current) {
  * - If the latitude is greater than current maximum, update northernmost
  * - If the latitude is less than current minimum, update southernmost
  *
- * TIE-BREAKING (CRITICAL FOR IDENTICAL OUTPUT ACROSS SORTED FILES):
- * If a record ties on the extreme coordinate value, choose the smaller ZIP.
+ * If multiple records in the same state tie for an extreme coordinate value,
+ * the record with smallest ZIP is chosen.
  */
 map<string, StateExtremes> calculateStateExtremes(const vector<ZipCodeRecord>& records) {
     map<string, StateExtremes> stateMap;

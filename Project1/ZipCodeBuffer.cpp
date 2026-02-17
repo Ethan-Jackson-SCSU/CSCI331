@@ -1,7 +1,8 @@
 /**
  * @file ZipCodeBuffer.cpp
  * @brief Implementation of the ZipCodeBuffer class
- * @author Teagen Lee, ADD NAMES
+ * @author Teagen Lee (primary contributor)
+ * @author Dristi Barnwal, Ethan Jackson, Marcus Julius, Natoli Mayu (reviewers)
  * @date February 2026
  * 
  * This file contains the implementation of all methods declared in

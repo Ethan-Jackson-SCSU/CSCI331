@@ -1,12 +1,32 @@
 /**
  * @file ZipCodeBuffer.h
- * @brief Header file for the ZipCodeBuffer class
- * @author Teagen Lee, ADD NAMES
+ * @brief Header file for the ZipCodeBuffer class and ZipCodeRecordStruct
+ * @author Teagen Lee (primary contributor)
+ * @author Ethan Jackson (additional comments and formatting)
+ * @author Dristi Barnwal, Marcus Julius, Natoli Mayu (reviewers)
  * @date February 2026
  * 
- * This file contains the declaration of the ZipCodeBuffer class which provides
- * functionality to read and parse ZIP code records from a CSV file. The class
- * implements buffered reading for efficient file I/O operations.
+ * This file contains the declarations of ZipCodeBuffer, a class which provides
+ * functionality to read and parse ZIP code records from a CSV file, and of
+ * ZipCodeRecord, a struct designed to contain one full row of data from the
+ * input file. The class ZipCodeBuffer implements buffered reading for efficient
+ * I/O operations.
+ * 
+ * @section ASSUMPTIONS
+ * This program makes the following working assumptions about the nature of the
+ * input file:
+ * -# The first line of the CSV file is a header row, containing the names of
+ * each field but no actual data.
+ * -# The CSV file has six fields per line, which are the zip code, name of the
+ * city or town, state or U.S. territory code, name of the county, latitude, and
+ * longitude, in that order.
+ * -# The latitude and longitude fields are always numerical values.
+ * -# The zip code field contains an integer between 0 and 99999, and uniquely
+ * identifies the row it is in.
+ * -# The state code consists of two characters.
+ * 
+ * Violating these assumptions should not cause the program to crash, but may
+ * result in misformatted, incomplete, or otherwise incorrect output.
  */
 
 #ifndef ZIPCODEBUFFER_H
@@ -23,9 +43,8 @@ using namespace std;
  * @struct ZipCodeRecord
  * @brief Structure to hold a single ZIP code record
  * 
- * This structure represents one row from the ZIP code CSV file,
- * containing all relevant geographic and administrative information
- * for a specific ZIP code.
+ * This structure represents one row from the ZIP code CSV file, containing all
+ * relevant geographic and administrative information for a specific ZIP code.
  */
 struct ZipCodeRecord {
     int zipCode;           ///< The 5-digit ZIP code
@@ -51,7 +70,7 @@ struct ZipCodeRecord {
      * @param lat Latitude
      * @param lon Longitude
      */
-    ZipCodeRecord(int zip, const string& place, const string& st,
+    ZipCodeRecord(int zip, const string& place, const string& st, const
                   const string& cnty, double lat, double lon);
 };
 
@@ -59,13 +78,12 @@ struct ZipCodeRecord {
  * @class ZipCodeBuffer
  * @brief A buffer class for reading ZIP code records from CSV files
  * 
- * This class provides an abstraction layer for reading ZIP code data
- * from a comma-separated values (CSV) file. It handles file I/O,
- * parsing, and error checking while maintaining a clean interface
- * for client code.
+ * This class provides an abstraction layer for reading ZIP code data from a
+ * comma-separated values (CSV) file. It handles file I/O, parsing, and error
+ * checking while maintaining a clean interface for client code.
  * 
- * The class uses internal buffering to efficiently read data from
- * the file and parse it into structured ZipCodeRecord objects.
+ * The class uses internal buffering to efficiently read data from the file and
+ * parse it into structured ZipCodeRecord objects.
  * 
  * @note The CSV file must have a header row which is automatically skipped
  * @note Expected CSV format: ZipCode,PlaceName,State,County,Lat,Long
@@ -83,11 +101,15 @@ private:
      * @param record Reference to ZipCodeRecord to populate
      * @return true if parsing was successful, false otherwise
      * 
-     * This private helper method takes a raw CSV line and extracts
-     * the individual fields, converting them to appropriate data types
-     * and storing them in the provided ZipCodeRecord structure.
+     * This helper method takes a raw CSV line and extracts the individual
+     * fields, converting them to appropriate data types and storing them in
+     * the provided ZipCodeRecord structure.
      * 
-     * Handles quoted fields and embedded commas correctly.
+     * Handles quoted fields and embedded commas correctly. Fails (returns
+     * false) if the CSV line does not match assumptions regarding the number,
+     * ordering, and data types of its fields.
+     *
+     * @see ZipCodeBuffer.h 
      */
     bool parseLine(const string& line, ZipCodeRecord& record);
     
@@ -114,8 +136,8 @@ public:
     /**
      * @brief Default constructor
      * 
-     * Creates an uninitialized ZipCodeBuffer. The open() method
-     * must be called before reading any records.
+     * Creates an uninitialized ZipCodeBuffer. The open() method must be called
+     * before reading any records.
      */
     ZipCodeBuffer();
     
@@ -123,8 +145,8 @@ public:
      * @brief Parameterized constructor
      * @param csvFilename Path to the CSV file to open
      * 
-     * Creates a ZipCodeBuffer and automatically opens the specified file.
-     * The header row is skipped during initialization.
+     * Creates a ZipCodeBuffer and automatically opens the specified file. The
+     * header row is skipped during initialization.
      */
     explicit ZipCodeBuffer(const string& csvFilename);
     
@@ -141,16 +163,16 @@ public:
      * @param csvFilename Path to the CSV file
      * @return true if file opened successfully, false otherwise
      * 
-     * Opens the specified CSV file and skips the header row.
-     * If a file is already open, it is closed first.
+     * Opens the specified CSV file and skips the header row. If a file is
+     * already open, it is closed first.
      */
     bool open(const string& csvFilename);
     
     /**
      * @brief Closes the currently open file
      * 
-     * Closes the file stream and resets internal state.
-     * Safe to call even if no file is open.
+     * Closes the file stream and resets internal state. Safe to call even if
+     * no file is open.
      */
     void close();
     
@@ -165,9 +187,9 @@ public:
      * @param record Reference to ZipCodeRecord to populate
      * @return true if a record was successfully read, false on EOF or error
      * 
-     * Reads one line from the CSV file, parses it, and populates the
-     * provided ZipCodeRecord structure. Returns false when end of file
-     * is reached or if a parsing error occurs.
+     * Reads one line from the CSV file, parses it, and populates the provided
+     * ZipCodeRecord structure. Returns false when end of file is reached or if
+     * a parsing error occurs.
      * 
      * @note Automatically skips the header row on first read
      */
@@ -180,7 +202,8 @@ public:
      * Reads the entire CSV file and returns all valid records as a vector.
      * The file position is reset to the beginning (after header) when complete.
      * 
-     * @note This method loads all data into memory - use with caution for very large files
+     * @note This method loads all data into memory - use with caution for very
+     * large files
      */
     vector<ZipCodeRecord> gatherAllRecords();
     
