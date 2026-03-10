@@ -284,6 +284,12 @@ static vector<string> splitCsvSimple(const string& line) {
  */
 static void printLabeledOneLine(const string& csvLine) {
     vector<string> f = splitCsvSimple(csvLine);
+
+    // Remove extra empty field caused by a trailing comma
+    if (!f.empty() && f.back().empty()) {
+        f.pop_back();
+    }
+
     if (f.size() != 6) {
         cout << "Record=" << csvLine << "\n";
         return;
