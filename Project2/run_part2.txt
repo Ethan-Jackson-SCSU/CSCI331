@@ -1,0 +1,104 @@
+Script started on 2026-03-10 16:03:55+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="145" LINES="17"]
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7mg++ -std=c++17 -Wall -Wextra -o zip2 \[27m
+[7mmain.cpp ZipCodeBuffer.cpp LenFileWriter.cpp LenFileReader.cpp IndexBuilder.cpp[27m[Ag++ -std=c++17 -Wall -Wextra -o zip2 \
+main.cpp ZipCodeBuffer.cpp LenFileWriter.cpp LenFileReader.cpp IndexBuilder.cpp
+[?2004l[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7m./zip2 us_postal_codes.csv[27m./zip2 us_postal_codes.csv
+[?2004lReading ZIP code data from: us_postal_codes.csv
+Total records read: 40933
+
+Analysis Results:
+=================
+
+State   Easternmost    Westernmost    Northernmost   Southernmost   
+--------------------------------------------------------------------
+AA      34034          34034          34034          34034
+AK      99546          99923          99723          99546
+AL      36584          36856          35739          36547
+AP      96373          96507          96507          96373
+AR      72747          72310          72733          71749
+AZ      85349          86508          86021          85620
+CA      95536          92267          95567          92173
+CO      81411          81047          81653          81138
+CT      68310          62430          60790          68360
+DC      20016          20019          20012          20375
+DE      19716          19944          19810          19975
+FL      32568          33480          32452          33040
+FM      96941          96941          96941          96941
+GA      30752          31328          30751          31562
+HI      96769          96898          96722          96772
+IA      51001          52734          52160          52632
+ID      83844          83238          83826          83237
+IL      62379          60438          60075          62914
+IN      47631          47003          46530          47635
+KS      67836          66118          66955          66778
+KY      42050          41568          41074          42049
+LA      71007          70081          71075          70081
+MA      12580          26430          19130          25640
+MD      21531          21842          21088          21866
+ME      42610          46310          47410          39040
+MH      96970          96960          96970          96960
+MI      49938          48061          49918          49232
+MN      56740          55605          56711          55931
+MO      64496          63881          63535          63829
+MP      96951          96950          96951          96952
+MS      39121          38847          38671          39558
+MT      59844          59319          59484          59739
+NC      28903          27982          28631          28468
+ND      58621          58074          58255          58043
+NE      69352          68431          69365          68325
+NH      34660          38540          35920          30620
+NJ      80700          76200          78270          82120
+NM      88056          88135          87418          88063
+NV      89402          89034          89404          89029
+NY      14736          11954          12979          10307
+OH      45003          44438          44030          45680
+OK      73946          74901          74072          74747
+OR      97465          97842          97121          97635
+PA      16155          18336          16428          19351
+PW      96940          96940          96940          96940
+RI      28910          28370          28240          28070
+SC      29658          29566          29356          29915
+SD      57724          57068          57645          57049
+TN      38109          37680          37119          37396
+TX      79821          75932          79051          78522
+UT      84083          84534          84331          84784
+VA      24248          23336          22625          24580
+VT      57340          59020          59020          53520
+WA      98350          99402          98231          98671
+WI      54082          54246          54850          53102
+WV      25555          25425          26050          24884
+WY      83120          82082          82423          82321
+
+Total states/territories: 57
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7m./zip2 --make-len us_postal_codes.csv zipcode_data.len[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./zip2 --make-len us_postal_codes.csv zipcode_data.len
+[?2004lCreated LEN file: zipcode_data.len
+Records written: 40933
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7m./zip2 --build-index zipcode_data.len zipcode_index.idx[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./zip2 --build-index zipcode_data.len zipcode_index.idx
+[?2004lCreated index file: zipcode_index.idx
+Index entries: 40933
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7m./zip2 --search zipcode_data.len zipcode_index.idx -Z56301 -Z99999[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./zip2 --search zipcode_data.len zipcode_index.idx -Z56301 -Z99999
+[?2004lUsing data file: zipcode_data.len
+Using index file: zipcode_index.idx
+Header: HDR,ZipLenFile,1,SIZEFMT=ASCII,SIZEWIDTH=10
+
+ZIP=56301 | Place=Saint Cloud | State=MN | County=Stearns | Lat=45.541 | Long=-94.1819
+ZIP 99999 not found in file
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7m./zip2 --make-len us_postal_codes_ROWS_RANDOMIZED.csv zipcode_random.len[27m
+[7m./zip2 --build-index zipcode_random.len zipcode_random.idx[27m
+[7m./zip2 --search zipcode_random.len zipcode_random.idx -Z56301 -Z99999[27m[A[A./zip2 --make-len us_postal_codes_ROWS_RANDOMIZED.csv zipcode_random.len
+./zip2 --build-index zipcode_random.len zipcode_random.idx
+./zip2 --search zipcode_random.len zipcode_random.idx -Z56301 -Z99999
+[?2004lCreated LEN file: zipcode_random.len
+Records written: 40935
+Created index file: zipcode_random.idx
+Index entries: 40935
+Using data file: zipcode_random.len
+Using index file: zipcode_random.idx
+Header: HDR,ZipLenFile,1,SIZEFMT=ASCII,SIZEWIDTH=10
+
+Record=56301,Saint Cloud,MN,Stearns,45.541,-94.1819,
+ZIP 99999 not found in file
+[?2004h[0;32m@Dristi0817 [0m➜ [1;34m/workspaces/CSCI331/Project2 [0;36m([1;31mmain[0;36m) [0m$ [7mexit[27mexit
+[?2004lexit
+
+Script done on 2026-03-10 16:06:04+00:00 [COMMAND_EXIT_CODE="0"]
