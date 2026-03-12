@@ -4,9 +4,9 @@
  *
  * This is a “multi-mode” program. It can run different tasks depending on the command.
  *
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * MODES (commands you can run)
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  *
  * 1) Project 1 style CSV analysis (streaming / no vector)
  *    ./zipprog <csv_file>
@@ -33,6 +33,7 @@
  */
 
 #include "ZipCodeBuffer.h"
+#include "HeaderBuffer.h"
 
 #include <iostream>
 #include <fstream>
@@ -285,6 +286,12 @@ static vector<string> splitCsvSimple(const string& line) {
 static void printLabeledOneLine(const string& csvLine) {
     vector<string> f = splitCsvSimple(csvLine);
 
+    for (auto& field : f) {
+        if (!field.empty() && field.back() == '\r')
+            field.pop_back();    
+    }
+        
+
     // Remove extra empty field caused by a trailing comma
     if (!f.empty() && f.back().empty()) {
         f.pop_back();
@@ -382,9 +389,10 @@ static int makeLenFromCsv(const string& csvFile, const string& lenFile) {
         return 4;
     }
 
-    // Minimal LEN header record (you will expand later to match rubric fields)
-    string lenHeaderText = "HDR,ZipLenFile,1,SIZEFMT=ASCII,SIZEWIDTH=10";
-    if (!writeLenLine(out, lenHeaderText)) {
+    // Write full header record using HeaderBuffer class
+    HeaderBuffer hbuf;
+    hbuf.buildDefault(lenFile + ".idx", 0);
+    if (!hbuf.write(out)) {
         cerr << "Error: Failed to write LEN header.\n";
         return 5;
     }
