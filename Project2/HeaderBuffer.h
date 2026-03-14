@@ -1,3 +1,11 @@
+/**
+ * @file HeaderBuffer.h
+ * @brief defines the HeaderBuffer class and the FileHeader struct.
+ * @author Dristi Barnwal (primary contributor)
+ * @author Ethan Jackson (functional revisions and additional comments)
+ * @author Marcus Julius, Teagen Lee, Natoli Mayu (reviewers)
+ * @date March 2026 
+ */
 #ifndef HEADERBUFFER_H
 #define HEADERBUFFER_H
 
@@ -8,32 +16,24 @@
 using namespace std;
 
 /**
- * @struct FieldDescriptor
- * @brief Stores the name and type format for one field in the data file.
- */
-struct FieldDescriptor {
-    string name;    ///< e.g. "ZipCode", "PlaceName"
-    string format;  ///< e.g. "int", "string", "double"
-};
-
-/**
  * @struct FileHeader
  * @brief All header record fields required by the assignment.
  */
 struct FileHeader {
-    string fileType;          ///< e.g. "ZipLenFile"
-    int version;              ///< version number, start at 1
+    bool sizeIncludesItself;  ///< true if size counts itself
+    bool staleIndex;          ///< true if index may be out of date
+    char sizeFormatType;      ///< 'A' for ASCII, 'b' for binary
+    int version;              ///< format version number, currently 2
+    int sizeOfSizes;          ///< number of bytes used for record length
     int headerSizeBytes;      ///< size of header record in bytes
     int recordSizeByteCount;  ///< bytes used for each record size integer
-    string sizeFormatType;    ///< "ASCII" or "binary"
-    int sizeOfSizes;          ///< how many bytes represent the size
-    bool sizeIncludesItself;  ///< true if size counts itself
-    string indexFileName;     ///< name of the .idx file
-    long long recordCount;    ///< total data records
-    int fieldCount;           ///< number of fields per record
-    vector<FieldDescriptor> fields; ///< one entry per field
+    int fieldCount;           ///< number of fields in each record
     int primaryKeyFieldIndex; ///< 0-based index of the primary key field
-    bool staleIndex;          ///< true if index may be out of date
+    long recordCount;         ///< total number of data records
+    string fileType;          ///< name of file type, e.g. "ZipLenFile"
+    string indexFileName;     ///< name of the .idx file
+    vector<string> fieldNames;///< the names of every field, e.g. "PlaceName"
+    vector<string> fieldTypes;///< the data types of every field, e.g. "int"
 };
 
 /**
@@ -45,7 +45,7 @@ public:
     HeaderBuffer();
 
     /// Build a default header for the ZIP code file
-    void buildDefault(const string& indexFileName, long long recordCount);
+    void buildDefault(const string& indexFileName, long recordCount);
 
     /// Write header to an open output stream
     bool write(ofstream& out);
