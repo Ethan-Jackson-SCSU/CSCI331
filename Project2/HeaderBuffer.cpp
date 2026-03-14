@@ -14,7 +14,22 @@
 
 using namespace std;
 
+/**
+ * @brief Default constructor for the HeaderBuffer class.
+ */
+
 HeaderBuffer::HeaderBuffer() {}
+
+/**
+ * @brief Builds a default header structure.
+ *
+ * Initializes the file header metadata including file type,
+ * version number, record size formatting, index file name,
+ * record count, and field descriptions for Zip Code records.
+ *
+ * @param indexFileName Name of the primary key index file.
+ * @param recordCount Number of records stored in the data file.
+ */
 
 void HeaderBuffer::buildDefault(const string& indexFileName, long recordCount) {
     header_.fileType = "ZipLenFile";
@@ -33,21 +48,45 @@ void HeaderBuffer::buildDefault(const string& indexFileName, long recordCount) {
     header_.fieldCount = (int)header_.fieldNames.size();
     header_.headerSizeBytes = (int)serialize().size();
 }
-
+/**
+ * @brief Retrieves the current file header.
+ *
+ * @return Constant reference to the FileHeader structure.
+ */
 const FileHeader& HeaderBuffer::getHeader() const {
     return header_;
 }
-
+/**
+ * @brief Writes the header record to the output file.
+ *
+ * The header is serialized and written using a length indicated
+ * record format.
+ *
+ * @param out Output file stream.
+ * @return True if the header was written successfully.
+ */
 bool HeaderBuffer::write(ofstream& out) {
     return writeLenLine(out, serialize());
 }
 
+/**
+ * @brief Reads the header record from an input file.
+ *
+ * @param in Input file stream.
+ * @return True if the header was successfully read and parsed.
+ */
 bool HeaderBuffer::read(ifstream& in) {
     string s;
     if (!readLenLine(in, s)) return false;
     return deserialize(s);
 }
 
+/**
+ * @brief Prints the header metadata to the console.
+ *
+ * This function is for debugging and verifying
+ * the contents of the file header.
+ */
 void HeaderBuffer::print() const {
     cout << "File type:\t    " << header_.fileType << "\n";
     cout << "Version:\t    " << header_.version << "\n";
@@ -65,6 +104,14 @@ void HeaderBuffer::print() const {
              << " (" << header_.fieldTypes[i] << ")\n";
     }
 }
+/**
+ * @brief Serializes the header structure into a comma separated string.
+ *
+ * The serialized string begins with the identifier "HDR" followed
+ * by all metadata values and field definitions.
+ * 
+ * @return Serialized header string.
+ */
 string HeaderBuffer::serialize() const {
     ostringstream ss;
     ss << "HDR"
@@ -85,7 +132,15 @@ string HeaderBuffer::serialize() const {
         ss << "," << f;
     return ss.str();
 }
-
+/**
+ * @brief Converts a serialized header string into a header structure.
+ *
+ * Parses the comma separated metadata and reconstructs the
+ * FileHeader structure including field descriptors.
+ *
+ * @param s Serialized header string.
+ * @return True if the header was successfully parsed.
+ */
 bool HeaderBuffer::deserialize(const string& s) {
     istringstream ss(s);
     string tok;
@@ -114,13 +169,28 @@ bool HeaderBuffer::deserialize(const string& s) {
         header_.fieldTypes.push_back(parts[i]);
     return true;
 }
+/**
+ * @brief Writes a length indicated record to the output file.
+ * @param out Output file stream.
+ * @param text Text content to write.
+ * @return True if the operation succeeded.
+ */
 
 bool HeaderBuffer::writeLenLine(ofstream& out, const string& text) {
     out << setw(10) << setfill('0') << text.size()
         << ' ' << text << '\n';
     return static_cast<bool>(out);
 }
-
+/**
+ * @brief Reads a length indicated record from the input file.
+ *
+ * The function first reads a fixed-width numeric field indicating
+ * the size of the following record, then reads the record text.
+ *
+ * @param in Input file stream.
+ * @param text Output variable storing the record text.
+ * @return True if the record was successfully read.
+ */
 bool HeaderBuffer::readLenLine(ifstream& in, string& text) {
     char buf[10];
     if (!in.read(buf, 10)) return false;
