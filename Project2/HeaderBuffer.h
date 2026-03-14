@@ -18,20 +18,18 @@ using namespace std;
 /**
  * @struct FileHeader
  * @brief All header record fields required by the assignment.
- * @note the vector "fields", which used a custom struct as its element type,
- * has been split into two vectors for simplicity. This decision inherently
- * assumes that the order of the header fields will not change.
  */
 struct FileHeader {
     bool sizeIncludesItself;  ///< true if size counts itself
     bool staleIndex;          ///< true if index may be out of date
-    int version;              ///< version number, start at 1
+    char sizeFormatType;      ///< 'A' for ASCII, 'b' for binary
+    int version;              ///< format version number, currently 2
+    int sizeOfSizes;          ///< number of bytes used for record length
     int headerSizeBytes;      ///< size of header record in bytes
     int recordSizeByteCount;  ///< bytes used for each record size integer
-    int sizeOfSizes;          ///< how many bytes represent the size
-    int fieldCount;           ///< number of fields per record
+    int fieldCount;           ///< number of fields in each record
     int primaryKeyFieldIndex; ///< 0-based index of the primary key field
-    long long recordCount;    ///< total number of data records
+    long recordCount;         ///< total number of data records
     string fileType;          ///< name of file type, e.g. "ZipLenFile"
     string indexFileName;     ///< name of the .idx file
     vector<string> fieldNames;///< the names of every field, e.g. "PlaceName"
@@ -47,7 +45,7 @@ public:
     HeaderBuffer();
 
     /// Build a default header for the ZIP code file
-    void buildDefault(const string& indexFileName, long long recordCount);
+    void buildDefault(const string& indexFileName, long recordCount);
 
     /// Write header to an open output stream
     bool write(ofstream& out);

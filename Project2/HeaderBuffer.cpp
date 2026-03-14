@@ -16,19 +16,20 @@ using namespace std;
 
 HeaderBuffer::HeaderBuffer() {}
 
-void HeaderBuffer::buildDefault(const string& indexFileName, long long recordCount) {
+void HeaderBuffer::buildDefault(const string& indexFileName, long recordCount) {
     header_.fileType = "ZipLenFile";
-    header_.version = 1;
+    header_.version = 2;
     header_.recordSizeByteCount = 22; //minimum record size (State is 2 chars)
-    header_.sizeFormatType = "ASCII";
-    header_.sizeOfSizes = 10; //size of headerSize (4) + size of sizeFormat?
+    header_.sizeFormatType = 'A';
+    header_.sizeOfSizes = 10; //10 digits in ASCII
     header_.sizeIncludesItself = true; //based on how header size is calculated
     header_.indexFileName = indexFileName;
     header_.recordCount = recordCount;
     header_.primaryKeyFieldIndex = 0;
     header_.staleIndex = false;
-    header_.fieldNames={"ZipCode","PlaceName","State","County","Longitude","Latitude"};
-    header_.fieldTypes = {"int", "string", "string", "string", "double", "double"}
+    header_.fieldNames = {"ZipCode", "PlaceName", "State", "County", //continued
+                          "Longitude", "Latitude"};
+    header_.fieldTypes = {"int","string","string","string","double","double"}
     header_.fieldCount = (int)header_.fieldNames.size();
     header_.headerSizeBytes = (int)serialize().size();
 }
@@ -95,11 +96,11 @@ bool HeaderBuffer::deserialize(const string& s) {
     header_.fileType             = parts[1];
     header_.version              = stoi(parts[2]);
     header_.recordSizeByteCount  = stoi(parts[3]);
-    header_.sizeFormatType       = parts[4];
+    header_.sizeFormatType       = parts[4].at(0);
     header_.sizeOfSizes          = stoi(parts[5]);
     header_.sizeIncludesItself   = (parts[6] == "1");
     header_.indexFileName        = parts[7];
-    header_.recordCount          = stoll(parts[8]);
+    header_.recordCount          = stol(parts[8]);
     header_.fieldCount           = stoi(parts[9]);
     header_.primaryKeyFieldIndex = stoi(parts[10]);
     header_.staleIndex           = (parts[11] == "1");
