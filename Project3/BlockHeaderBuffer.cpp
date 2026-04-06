@@ -2,12 +2,13 @@
  * @file BlockHeaderBuffer.cpp
  * @brief Implementation of BlockHeaderBuffer.
  *
- * @author Teagen Lee
+ * @author Teagen Lee (primary contributor)
+ * @author Ethan Jackson (formatting adjustments)
  * @date Spring 2026
  */
 
 #include "BlockHeaderBuffer.h"
-#include "BlockBuffer.h"   // for RBN_NULL, RECORD_LEN_WIDTH
+#include "BlockBuffer.h" // for RBN_NULL, RECORD_LEN_WIDTH
 
 #include <sstream>
 #include <iomanip>
@@ -23,27 +24,30 @@ using namespace std;
 
 /**
  * @brief Construct a BlockHeaderBuffer.
+ *
+ * Initializes all values to safe defaults.
+ * 
  * @param blockSize Block size in bytes (must match the data file).
  */
 BlockHeaderBuffer::BlockHeaderBuffer(int blockSize)
     : blockSize_(blockSize)
 {
     // Initialise to safe defaults
-    hdr_.fileType            = "";
-    hdr_.version             = 0;
-    hdr_.headerSizeBytes     = 0;
-    hdr_.recordSizeBytes     = RECORD_LEN_WIDTH;
-    hdr_.sizeFormatType      = "ASCII";
-    hdr_.blockSize           = blockSize;
+    hdr_.fileType    = "";
+    hdr_.version     = 0;
+    hdr_.headerSizeBytes = 0;
+    hdr_.recordSizeBytes = RECORD_LEN_WIDTH;
+    hdr_.sizeFormatType  = "ASCII";
+    hdr_.blockSize   = blockSize;
     hdr_.minBlockCapacityPct = 50;
-    hdr_.indexFileName       = "";
-    hdr_.indexSchema         = "key:string;rbn:int";  // semicolons avoid CSV parse collision
-    hdr_.blockCount          = 0;
-    hdr_.fieldCount          = 0;
-    hdr_.primaryKeyIndex     = 0;
-    hdr_.availHeadRBN        = RBN_NULL;
-    hdr_.seqSetHeadRBN       = RBN_NULL;
-    hdr_.staleFlag           = false;
+    hdr_.indexFileName = "";
+    hdr_.indexSchema = "key:string;rbn:int"; // ; prevents CSV parse collision
+    hdr_.blockCount = 0;
+    hdr_.fieldCount = 0;
+    hdr_.primaryKeyIndex = 0;
+    hdr_.availHeadRBN    = RBN_NULL;
+    hdr_.seqSetHeadRBN   = RBN_NULL;
+    hdr_.staleFlag   = false;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -53,27 +57,24 @@ BlockHeaderBuffer::BlockHeaderBuffer(int blockSize)
 /**
  * @brief Populate the header with default values for the ZIP code blocked file.
  */
-void BlockHeaderBuffer::buildDefault(const string& indexFileName,
-                                     int    blockSize,
-                                     long long recordCount,
-                                     int    blockCount,
-                                     int    availHead,
-                                     int    seqHead)
+void BlockHeaderBuffer::buildDefault(const string& indexFileName, int blockSize,
+                                     long long recordCount, int blockCount,
+                                     int availHead, int seqHead)
 {
-    hdr_.fileType            = "ZipBlockedSeqSet";
-    hdr_.version             = 1;
-    hdr_.recordSizeBytes     = RECORD_LEN_WIDTH; // 4 bytes per record length prefix
-    hdr_.sizeFormatType      = "ASCII";
-    hdr_.blockSize           = blockSize;
+    hdr_.fileType    = "ZipBlockedSeqSet";
+    hdr_.version     = 1;
+    hdr_.recordSizeBytes = RECORD_LEN_WIDTH; // 4 bytes per record length prefix
+    hdr_.sizeFormatType  = "ASCII";
+    hdr_.blockSize   = blockSize;
     hdr_.minBlockCapacityPct = 50;
-    hdr_.indexFileName       = indexFileName;
-    hdr_.indexSchema         = "key:string;rbn:int";  // semicolons avoid CSV parse collision
-    hdr_.recordCount         = recordCount;
-    hdr_.blockCount          = blockCount;
-    hdr_.primaryKeyIndex     = 0;
-    hdr_.availHeadRBN        = availHead;
-    hdr_.seqSetHeadRBN       = seqHead;
-    hdr_.staleFlag           = false;
+    hdr_.indexFileName   = indexFileName;
+    hdr_.indexSchema = "key:string;rbn:int"; // ; prevents CSV parse collision
+    hdr_.recordCount = recordCount;
+    hdr_.blockCount  = blockCount;
+    hdr_.primaryKeyIndex = 0;
+    hdr_.availHeadRBN    = availHead;
+    hdr_.seqSetHeadRBN   = seqHead;
+    hdr_.staleFlag   = false;
 
     // Set fields BEFORE calling serialize() so headerSizeBytes is accurate
     hdr_.fields = {
@@ -110,7 +111,7 @@ bool BlockHeaderBuffer::write(fstream& fs) const {
     fs.seekp(0);
 
     string csv = serialize();
-    int    len = static_cast<int>(csv.size());
+    int len = static_cast<int>(csv.size());
 
     // Build a block-sized buffer filled with spaces
     string block(blockSize_, ' ');
@@ -121,8 +122,10 @@ bool BlockHeaderBuffer::write(fstream& fs) const {
     string lenStr = lenSS.str();
 
     int pos = 0;
-    block.replace(pos, 10, lenStr);  pos += 10;
-    block[pos] = ' ';                pos += 1;
+    block.replace(pos, 10, lenStr);
+    pos += 10;
+    block[pos] = ' ';
+    pos += 1;
     block.replace(pos, csv.size(), csv);
 
     fs.write(block.c_str(), blockSize_);
@@ -131,7 +134,7 @@ bool BlockHeaderBuffer::write(fstream& fs) const {
 
 /**
  * @brief Read the header record from RBN 0 of the open fstream.
- *
+ * 
  * @param fs Open fstream.
  * @return true on success.
  */
@@ -153,7 +156,7 @@ bool BlockHeaderBuffer::read(fstream& fs) {
     int len = stoi(lenStr);
 
     // Extract the CSV text
-    // block[10] == ' '  (space separator)
+    // block[10] == ' ' (space separator)
     if (static_cast<int>(block.size()) < 11 + len) return false;
     string csv = block.substr(11, len);
 
@@ -165,13 +168,14 @@ bool BlockHeaderBuffer::read(fstream& fs) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const BlockFileHeader& BlockHeaderBuffer::getHeader() const { return hdr_; }
-BlockFileHeader&       BlockHeaderBuffer::getHeader()       { return hdr_; }
+BlockFileHeader& BlockHeaderBuffer::getHeader() { return hdr_; }
 
-void BlockHeaderBuffer::setRecordCount(long long count) { hdr_.recordCount  = count; }
-void BlockHeaderBuffer::setBlockCount(int count)        { hdr_.blockCount   = count; }
-void BlockHeaderBuffer::setAvailHead(int rbn)           { hdr_.availHeadRBN = rbn;   }
-void BlockHeaderBuffer::setSeqSetHead(int rbn)          { hdr_.seqSetHeadRBN = rbn;  }
-void BlockHeaderBuffer::setStale(bool s)                { hdr_.staleFlag    = s;      }
+void BlockHeaderBuffer::setRecordCount(long long count) //cont. on line below
+    { hdr_.recordCount = count; }
+void BlockHeaderBuffer::setBlockCount(int count) { hdr_.blockCount = count; }
+void BlockHeaderBuffer::setAvailHead(int rbn) { hdr_.availHeadRBN = rbn; }
+void BlockHeaderBuffer::setSeqSetHead(int rbn) { hdr_.seqSetHeadRBN = rbn; }
+void BlockHeaderBuffer::setStale(bool s) { hdr_.staleFlag = s; }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Display
@@ -182,27 +186,32 @@ void BlockHeaderBuffer::setStale(bool s)                { hdr_.staleFlag    = s;
  */
 void BlockHeaderBuffer::print() const {
     cout << "=== Blocked Sequence Set Header ===\n";
-    cout << "  File type           : " << hdr_.fileType          << "\n";
-    cout << "  Version             : " << hdr_.version           << "\n";
-    cout << "  Header size         : " << hdr_.headerSizeBytes   << " bytes\n";
-    cout << "  Record size width   : " << hdr_.recordSizeBytes   << " bytes\n";
-    cout << "  Size format         : " << hdr_.sizeFormatType    << "\n";
-    cout << "  Block size          : " << hdr_.blockSize         << " bytes\n";
-    cout << "  Min block capacity  : " << hdr_.minBlockCapacityPct << "%\n";
-    cout << "  Index file          : " << hdr_.indexFileName     << "\n";
-    cout << "  Index schema        : " << hdr_.indexSchema       << "\n";
-    cout << "  Record count        : " << hdr_.recordCount       << "\n";
-    cout << "  Block count         : " << hdr_.blockCount        << "\n";
-    cout << "  Field count         : " << hdr_.fieldCount        << "\n";
-    cout << "  Primary key field   : " << hdr_.primaryKeyIndex   << "\n";
-    cout << "  Avail head RBN      : ";
-    if (hdr_.availHeadRBN == RBN_NULL) cout << "(none)\n"; else cout << hdr_.availHeadRBN << "\n";
-    cout << "  Seq-set head RBN    : ";
-    if (hdr_.seqSetHeadRBN == RBN_NULL) cout << "(none)\n"; else cout << hdr_.seqSetHeadRBN << "\n";
-    cout << "  Stale flag          : " << (hdr_.staleFlag ? "yes" : "no") << "\n";
+    cout << "  File type\t    : "     << hdr_.fileType << "\n";
+    cout << "  Version\t    : "       << hdr_.version << "\n";
+    cout << "  Header size\t    : "   << hdr_.headerSizeBytes << " bytes\n";
+    cout << "  Record size width  : " << hdr_.recordSizeBytes << " bytes\n";
+    cout << "  Size format\t    : "   << hdr_.sizeFormatType << "\n";
+    cout << "  Block size\t    : "    << hdr_.blockSize << " bytes\n";
+    cout << "  Min block capacity : " << hdr_.minBlockCapacityPct << "%\n";
+    cout << "  Index file\t    : "    << hdr_.indexFileName << "\n";
+    cout << "  Index schema\t    : "  << hdr_.indexSchema << "\n";
+    cout << "  Record count\t    : "  << hdr_.recordCount << "\n";
+    cout << "  Block count\t    : "   << hdr_.blockCount << "\n";
+    cout << "  Field count\t    : "   << hdr_.fieldCount << "\n";
+    cout << "  Primary key field  : " << hdr_.primaryKeyIndex << "\n";
+    cout << "  Avail head RBN     : ";
+    if (hdr_.availHeadRBN == RBN_NULL) 
+        cout << "(none)\n";
+    else
+        cout << hdr_.availHeadRBN << "\n";
+    cout << "  Seq-set head RBN   : ";
+    if (hdr_.seqSetHeadRBN == RBN_NULL)
+        cout << "(none)\n";
+    else
+        cout << hdr_.seqSetHeadRBN << "\n";
+    cout << "  Stale flag\t    : " << (hdr_.staleFlag ? "yes" : "no") << "\n";
     for (int i = 0; i < static_cast<int>(hdr_.fields.size()); i++) {
-        cout << "  Field[" << i << "]            : "
-             << hdr_.fields[i].name
+        cout << "  Field[" << i << "]\t    : " << hdr_.fields[i].name
              << " (" << hdr_.fields[i].format << ")\n";
     }
 }
@@ -263,9 +272,11 @@ bool BlockHeaderBuffer::deserialize(const string& s) {
         parts.push_back(tok);
     }
 
-    // Fixed fields: BHDR + 15 values + stale = 17 minimum (field descriptors optional)
-    if (parts.size() < 17) return false;
-    if (parts[0] != "BHDR") return false;
+    // Fixed fields: BHDR + 15 values + stale = 17 minimum
+    if (parts.size() < 17)
+        return false;
+    if (parts[0] != "BHDR")
+        return false;
 
     try {
         hdr_.fileType            = parts[1];
@@ -292,7 +303,8 @@ bool BlockHeaderBuffer::deserialize(const string& s) {
     hdr_.fields.clear();
     for (int i = 17; i < static_cast<int>(parts.size()); i++) {
         auto colon = parts[i].find(':');
-        if (colon == string::npos) continue;
+        if (colon == string::npos)
+            continue;
         BFieldDescriptor fd;
         fd.name   = parts[i].substr(0, colon);
         fd.format = parts[i].substr(colon + 1);

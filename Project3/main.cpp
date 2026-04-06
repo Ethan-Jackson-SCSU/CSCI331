@@ -42,11 +42,24 @@
  *    loaded entirely into RAM during search/add/delete.
  *  - Block splits, merges, and redistributions are logged to stdout.
  *  - All program variables that can vary are set by command line or metadata.
- *  - The preceding "--" is optional for all modes arguments.
+ *  - The preceding "--" is optional for all mode arguments.
  *
- * @since Project 3.0
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DEVIATIONS FROM DESIGN PLAN
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * The logic to get the name of the .sidx file and the block size from the
+ * header block in the .bss file has not yet been implemented. Therefore, the
+ * .sidx file and the block size (if non-default) must be supplied through the
+ * command line for all modes.
+ *
+ * Also, --add and --delete do not accept user-supplied thresholds for merging
+ * or splitting blocks. Blocks will always be merged when below 50% capacity, 
+ * and split at above 100% capacity.
+ *
  * @author Teagen Lee (primary contributor)
  * @author Ethan Jackson (formatting, documentation, and functional revisions)
+ * @author Dristi Barnwal (authored code re-used from project 2.0)
  * @date April 2026
  */
 
@@ -172,7 +185,7 @@ static void printExtremes(const map<string, StateExtremes>& stateMap) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Usage
+// Helper functions
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -192,10 +205,6 @@ static void printUsage(const string& prog) {
          << prog << " --delete << dataArgs << " <keys.txt>" << lastArg
          << prog << " --header" << dataArgs << lastArg << "\r";
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helper: parse optional block size from argv
-// ─────────────────────────────────────────────────────────────────────────────
 
 /**
  * @brief Try to read an integer block size from a command-line argument.
@@ -238,8 +247,7 @@ static int modeCreate(int argc, char* argv[]) {
     string bssFile  = argv[3];
     string sidxFile = argv[4];
     int blockSize   = DEFAULT_BLOCK_SIZE;
-    
-    int blockSize = DEFAULT_BLOCK_SIZE;
+
     if (argc >= 6) {
         if (argc > 6)
             cerr << "Warning: more arguments given than accepted by " //...
@@ -539,6 +547,7 @@ static int modeHeader(int argc, char* argv[]) {
     SequenceSet ss(blockSize);
     if (!ss.open(argv[2], argv[3]))
         return 2;
+
     ss.printHeader();
     ss.close();
     return 0;
@@ -551,7 +560,7 @@ static int modeHeader(int argc, char* argv[]) {
 /**
  * @brief Program entry point. Dispatches to the appropriate mode.
  * @see modeCreate, modeDump, modeIndex, modeDumpIndex, modeSearch, modeAnalyze,
- * modeAdd, modeDelete, & modeHeader
+ * modeAdd, modeDelete, modeHeader
  */
 int main(int argc, char* argv[]) {
     if (argc < 2) {

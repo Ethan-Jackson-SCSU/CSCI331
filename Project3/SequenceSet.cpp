@@ -874,6 +874,9 @@ string SequenceSet::keyOf(const string& csvRecord) {
  *
  * @param bb Reference block (used to compute average record size).
  * @return Minimum record count.
+ *
+ * @bug This method does not make use of minBlockCapacityPct in the header. The
+ * threshhold of 50% is hard-coded.
  */
 int SequenceSet::minRecords(const BlockBuffer& bb) const {
     // Payload available for records

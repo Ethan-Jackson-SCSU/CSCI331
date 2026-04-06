@@ -57,22 +57,22 @@ struct BFieldDescriptor {
  * @brief All header fields for a blocked sequence set data file.
  */
 struct BlockFileHeader {
-    bool staleFlag;      ///< True if index may be out of date.
-    int version;         ///< File structure version (start at 1).
+    bool staleFlag;  ///< True if index may be out of date.
+    int version;     ///< File structure version (start at 1).
     int headerSizeBytes; ///< Byte length of the serialized header record.
     int recordSizeBytes; ///< Width of per-record length prefix (4 bytes).
-    int blockSize;       ///< Bytes per block (default 512).
+    int blockSize;   ///< Bytes per block (default 512).
     int minBlockCapacityPct; ///< Minimum fill percentage (default 50).
-    int blockCount;      ///< Total blocks allocated (including header block).
-    int fieldCount;      ///< Number of fields per record.
+    int blockCount;  ///< Total blocks allocated (including header block).
+    int fieldCount;  ///< Number of fields per record.
     int primaryKeyIndex; ///< 0-based field index of the primary key.
     int availHeadRBN;    ///< Head of avail-list chain (RBN_NULL if empty).
-    int seqSetHeadRBN; ///< Head of active SequenceSet chain (1st data block).
-    long long recordCount; ///< Total ZIP records stored.
-    string fileType;       ///< "ZipBlockedSeqSet".
-    string sizeFormatType; ///< "ASCII".
-    string indexFileName;  ///< Name of the simple index file (.sidx).
-    string indexSchema; ///< Describes index format, e.g. "key:string;rbn:int".
+    int seqSetHeadRBN;   ///< Head of active SequenceSet chain (1st data block).
+    long long recordCount;   ///< Total ZIP records stored.
+    string fileType; ///< "ZipBlockedSeqSet".
+    string sizeFormatType;   ///< "ASCII".
+    string indexFileName;    ///< Name of the simple index file (.sidx).
+    string indexSchema;  ///< Describes index format, e.g. "key:string;rbn:int".
     vector<BFieldDescriptor> fields; ///< One entry per field.
 };
 
@@ -84,7 +84,7 @@ struct BlockFileHeader {
  * @class BlockHeaderBuffer
  * @brief Reads and writes the header record for a blocked sequence set file.
  *
- * The header occupies exactly one block (RBN 0).  It is stored as a
+ * The header occupies exactly one block (RBN 0). It is stored as a
  * length-indicated CSV record padded with spaces to blockSize bytes.
  */
 class BlockHeaderBuffer {
@@ -111,21 +111,17 @@ public:
      * @param availHead RBN of first avail block (RBN_NULL if none).
      * @param seqHead RBN of first active data block.
      */
-    void buildDefault(const string& indexFileName,
-                      int    blockSize,
-                      long long recordCount,
-                      int    blockCount,
-                      int    availHead,
-                      int    seqHead);
+    void buildDefault(const string& indexFileName, int blockSize, long long 
+                      recordCount, int blockCount, int availHead, int seqHead);
 
     // ── I/O ──────────────────────────────────────────────────────────────────
 
     /**
      * @brief Write the header to RBN 0 of an open fstream.
-     *
+     * 
      * The header record is written as:
-     *   [10-byte ASCII length][space][CSV text][padding to blockSize]
-     *
+     * [10-byte ASCII length][space][CSV text][padding to blockSize]
+     * 
      * @param fs Open fstream positioned at any location (seeked internally).
      * @return true on success.
      */
@@ -142,7 +138,7 @@ public:
     // ── Accessors/Mutators ───────────────────────────────────────────────────
 
     const BlockFileHeader& getHeader() const;
-    BlockFileHeader&       getHeader();
+    BlockFileHeader& getHeader();
 
     void setRecordCount(long long count);
     void setBlockCount(int count);
