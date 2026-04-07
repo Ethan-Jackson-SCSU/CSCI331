@@ -202,7 +202,7 @@ static void printUsage(const string& prog) {
          << prog << " --search" << dataArgs << " -Z<zip> ..." << lastArg
          << prog << " --analyze" << dataArgs << lastArg
          << prog << " --add" << dataArgs << " <add.csv>" << lastArg
-         << prog << " --delete << dataArgs << " <keys.txt>" << lastArg
+         << prog << " --delete" << dataArgs << " <keys.txt>" << lastArg
          << prog << " --header" << dataArgs << lastArg << "\r";
 }
 
@@ -226,7 +226,7 @@ static bool parseBlockSize(const string& arg, int& result) {
     } catch (out_of_range) {
         cerr << "Error: the given blockSize is too large. ";
     }
-    cerr << "Trying the default size (" << DEFAULT_BLOCK SIZE << ") instead.\n";
+    cerr << "Trying the default size (" << DEFAULT_BLOCK_SIZE << ") instead.\n";
     return false;
 }
 
@@ -279,7 +279,7 @@ static int modeDump(int argc, char* argv[]) {
     }
 
     SequenceSet ss(blockSize);
-    if (!ss.open(argv[2], argv[3])
+    if (!ss.open(argv[2], argv[3]))
         return 2;
     ss.dumpPhysical();
     cout << "\n";
@@ -567,35 +567,28 @@ int main(int argc, char* argv[]) {
         printUsage(argv[0]);
         return 1;
     }
-    
-    switch (argv[1]) {
-    case "--create":
-    case "create":
+
+    string command = argv[1];
+
+    if (command == "--create")  
         return modeCreate(argc, argv);
-    case "--dump":
-    case "dump":
+    if (command == "--dump")
         return modeDump(argc, argv);
-    case "--dump-index":
-    case "dump-index":
+    if (command == "--dump-index")
         return modeDumpIndex(argc, argv);
-    case "--search":
-    case "search":
+    if (command == "--search")
         return modeSearch(argc, argv);
-    case "--analyze":
-    case "analyze":
+    if (command == "--analyze")
         return modeAnalyze(argc, argv);
-    case "--add":
-    case "add":
+    if (command == "--add")
         return modeAdd(argc, argv);
-    case "--delete":
-    case "delete":
+    if (command == "--delete")
         return modeDelete(argc, argv);
-    case "--header":
-    case "header":
+    if (command == "--header")
         return modeHeader(argc, argv);
-    default:
-        cerr << "Unknown command: " << argv[1] << "\n";
-        printUsage(argv[0]);
-        return 1;
-    }
+    
+    cerr << "Unknown command: " << command << "\n";
+    printUsage(argv[0]);
+    return 1;
+    
 }
